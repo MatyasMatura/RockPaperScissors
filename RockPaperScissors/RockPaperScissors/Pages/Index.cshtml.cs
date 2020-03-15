@@ -5,21 +5,42 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using RockPaperScissors.Model;
+using RockPaperScissors.Service;
 
 namespace RockPaperScissors.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly RpsLogic _rpsLogic;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(RpsLogic rpsLogic)
         {
-            _logger = logger;
+            _rpsLogic = rpsLogic;
         }
 
+        public string Message { get; set; }
+
+        [BindProperty]
+        public Rps GameData { get; set; }
+
+        [BindProperty]
+        public RpsMode UserChoice { get; set; }
+
+        // zahájení hry - začíná první kolo
         public void OnGet()
         {
+            Message = "Začíná hra...pravidla už znáš";
+            GameData = _rpsLogic.userData;
+        }
 
+        public void OnPost()
+        {
+            if (this.ModelState.IsValid)
+            {
+                _rpsLogic.userData = GameData;
+                _rpsLogic.GameRound(UserChoice);
+            }
         }
     }
 }

@@ -1,10 +1,44 @@
 ﻿@page
 @model IndexModel
+@using RockPaperScissors.Model
 @{
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Kámen nůžky papír</h1>
+    <p>Win: @Model.GameData.WinCounter | Loss: @Model.GameData.LossCounter | Draw: @Model.GameData.DrawCounter</p>
+
+    <form method="post">
+        <input type="hidden" asp-for="GameData.WinCounter" value="@Model.GameData.WinCounter" />
+        <input type="hidden" asp-for="GameData.LossCounter" value="@Model.GameData.LossCounter" />
+        <input type="hidden" asp-for="GameData.DrawCounter" value="@Model.GameData.DrawCounter" />
+        <input type="radio" asp-for="UserChoice" value="@RpsMode.Rock" />Kámen<br />
+        <input type="radio" asp-for="UserChoice" value="@RpsMode.Scissors" />Nůžky<br />
+        <input type="radio" asp-for="UserChoice" value="@RpsMode.Paper" />Papír<br />
+        <input type="submit" value="Hraj!" />
+    </form>
+    <div>
+        @if (Model.UserChoice != RpsMode.None)
+        {
+            <span>
+                @Html.DisplayFor((x) => x.GameData.UserChoice) vs
+                @Html.DisplayFor((x) => x.GameData.AiChoice)
+            </span>
+            @if (Model.GameData.IsWinner == true)
+            {
+                <p>Vyhrál si!</p>
+            }
+            @if (Model.GameData.IsWinner == null)
+            {
+                <p>Remíza</p>
+            }
+            @if (Model.GameData.IsWinner == false)
+            {
+                <p>Prohrál si!</p>
+            }
+        }
+    </div>
+
+
 </div>
